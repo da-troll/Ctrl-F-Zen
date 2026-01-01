@@ -89,7 +89,7 @@ export const V86Screen: React.FC = () => {
 
       let hda = activeGame?.hdaUrl ? {
         url: activeGame.hdaUrl,
-        async: true,
+        async: false,
         size: activeGame.hdaSize
       } : undefined;
       let fda = activeGame?.floppyUrl ? { url: activeGame.floppyUrl, async: true } : undefined;
