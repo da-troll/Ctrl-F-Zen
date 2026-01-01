@@ -14,6 +14,7 @@ export interface GameConfig {
   fdbUrl?: string;
   cdromUrl?: string;
   hdaUrl?: string;
+  hdaSize?: number; // size in bytes for hda
   biosUrl?: string;
   vgaUrl?: string;
   memorySize: number; // in bytes

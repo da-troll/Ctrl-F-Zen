@@ -87,7 +87,11 @@ export const V86Screen: React.FC = () => {
 
       addLog("Initializing V86 Engine...");
 
-      let hda = activeGame?.hdaUrl ? { url: activeGame.hdaUrl, async: true } : undefined;
+      let hda = activeGame?.hdaUrl ? {
+        url: activeGame.hdaUrl,
+        async: true,
+        size: activeGame.hdaSize
+      } : undefined;
       let fda = activeGame?.floppyUrl ? { url: activeGame.floppyUrl, async: true } : undefined;
       let fdb = activeGame?.fdbUrl ? { url: activeGame.fdbUrl, async: true } : undefined;
       let cdrom = activeGame?.cdromUrl ? { url: activeGame.cdromUrl, async: true } : undefined;
