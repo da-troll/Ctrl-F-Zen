@@ -43,12 +43,23 @@ export const BoxedwineScreen: React.FC = () => {
       addLog(`Loading: ${activeGame?.title}`);
       addLog("Preparing Wine environment...");
 
-      // Initialize Config object
+      // Initialize Config object with full configuration
       window.Config = {
         urlParams: `p=${executableName}`,
         storageMode: "MEMORY",
         showUploadDownload: false,
         isRunningInline: true,
+        rootZipFile: "boxedwine_full.zip",
+        appZipFile: "files.zip",
+        Program: executableName,
+        WorkingDir: "/root/home/username/files/",
+        dirPrefix: "/root/home/username/files/",
+        isAutoRunSet: true,
+        isSoundEnabled: true,
+        isZlibEnabled: false,
+        retrieveDlls: false,
+        bpp: 32,
+        extraZipFiles: "",
       };
 
       // Configure Emscripten Module
