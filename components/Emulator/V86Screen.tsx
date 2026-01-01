@@ -91,18 +91,16 @@ export const V86Screen: React.FC = () => {
       let fda = activeGame?.floppyUrl ? { url: activeGame.floppyUrl, async: true } : undefined;
       let cdrom = activeGame?.cdromUrl ? { url: activeGame.cdromUrl, async: true } : undefined;
 
-      // Special handling: if we have an executable but are forced to use v86,
-      // we try to mount it as a floppy if no floppy exists, or rely on HDA.
+      // Note: .exe files cannot be directly mounted in v86
+      // They need to be packaged in a disk image (.img) first
       if (activeGame?.type === 'exe' && activeGame.executableUrl) {
-          addLog("Running .exe in v86 requires a bootable OS image.");
-          if (!hda) {
-              addLog("Warning: No bootable OS image provided for .exe execution.");
-              addLog("Please provide a FreeDOS or Windows image via hdaUrl.");
-          }
-          if (!fda && activeGame.executableUrl) {
-              addLog("Mounting executable as floppy...");
-              fda = { url: activeGame.executableUrl, async: true };
-          }
+          addLog("Note: .exe files must be packaged in a disk image to run.");
+          addLog("FreeDOS will boot. To run the .exe:");
+          addLog("1. Download it from your browser");
+          addLog("2. Create a floppy image containing the .exe");
+          addLog("3. Upload the .img file instead");
+          addLog("");
+          addLog("For now, you can explore FreeDOS and built-in games.");
       }
 
       const v86Options: V86StarterOptions = {
