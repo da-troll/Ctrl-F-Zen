@@ -29,11 +29,6 @@ export const BoxedwineScreen: React.FC = () => {
     emulatorStarted.current = true;
 
     try {
-      // Check if Boxedwine is available
-      if (!window.Module || !window.Config) {
-        throw new Error("Boxedwine not loaded. Please refresh the page.");
-      }
-
       // Verify canvas is available
       if (!canvasRef.current) {
         throw new Error("Canvas not ready. Please try again.");
@@ -48,11 +43,13 @@ export const BoxedwineScreen: React.FC = () => {
       addLog(`Loading: ${activeGame?.title}`);
       addLog("Preparing Wine environment...");
 
-      // Set Boxedwine configuration
-      window.Config.urlParams = `p=${executableName}`;
-      window.Config.storageMode = "MEMORY"; // Use memory storage
-      window.Config.showUploadDownload = false;
-      window.Config.isRunningInline = true;
+      // Initialize Config object
+      window.Config = {
+        urlParams: `p=${executableName}`,
+        storageMode: "MEMORY",
+        showUploadDownload: false,
+        isRunningInline: true,
+      };
 
       // Configure Emscripten Module
       window.Module = {
@@ -75,13 +72,16 @@ export const BoxedwineScreen: React.FC = () => {
         },
       };
 
-      addLog("Starting Wine...");
+      addLog("Loading Boxedwine runtime...");
 
-      // Note: The actual executable loading will need to be handled separately
-      // For now, this will boot Wine with the default environment
-      // TODO: Implement file upload/injection for TrackWords.exe
-
-      addLog("Wine initialized. Ready to run Windows applications.");
+      // Dynamically load boxedwine.js
+      const script = document.createElement('script');
+      script.src = '/boxedwine.js';
+      script.async = true;
+      script.onerror = () => {
+        throw new Error("Failed to load boxedwine.js");
+      };
+      document.body.appendChild(script);
 
     } catch (err: any) {
       console.error("Boxedwine start error:", err);
