@@ -1,15 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-// @ts-ignore - v86 is resolved via importmap in index.html
-import { V86Starter } from 'v86';
 import { useEmulatorStore } from '../../store/emulatorStore';
 import { EmulatorState, V86StarterOptions } from '../../types';
 import { CRTOverlay } from './CRTOverlay';
 
+// V86 is loaded from CDN as a global variable (window.V86)
+declare global {
+  interface Window {
+    V86: any;
+  }
+}
+
 const V86_ASSETS = {
-  wasmUrl: "https://unpkg.com/v86@0.4.9/build/v86.wasm",
-  biosUrl: "https://unpkg.com/v86@0.4.9/bios/seabios.bin",
-  vgaUrl: "https://unpkg.com/v86@0.4.9/bios/vgabios.bin",
-  freeDosUrl: "https://copy.sh/v86/images/freedos722.img"
+  wasmUrl: "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm",
+  biosUrl: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
+  vgaUrl: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
+  // FreeDOS image URL removed - copy.sh is unreachable
+  // Users can download FreeDOS from https://freedos.org/download/ or https://archive.org/details/FD12CD
+  freeDosUrl: undefined
 };
 
 export const V86Screen: React.FC = () => {
@@ -53,9 +60,30 @@ export const V86Screen: React.FC = () => {
     }
 
     try {
-      if (!V86Starter) {
-         throw new Error("V86 Engine module not loaded.");
+      // Check if V86 is available on window object
+      if (!window.V86) {
+         throw new Error("V86 Engine module not loaded. Please refresh the page.");
       }
+
+      // Verify container is available
+      if (!containerRef.current) {
+         throw new Error("Screen container not ready. Please try again.");
+      }
+
+      // Set up the screen container with required child elements for v86
+      containerRef.current.innerHTML = '';
+
+      // v86 expects specific child elements in the container
+      const textDiv = document.createElement('div');
+      textDiv.style.whiteSpace = 'pre';
+      textDiv.style.font = '14px monospace';
+      textDiv.style.lineHeight = '14px';
+
+      const canvas = document.createElement('canvas');
+      canvas.style.display = 'none';
+
+      containerRef.current.appendChild(textDiv);
+      containerRef.current.appendChild(canvas);
 
       addLog("Initializing V86 Engine...");
       
@@ -68,10 +96,10 @@ export const V86Screen: React.FC = () => {
       if (activeGame?.type === 'exe' && activeGame.executableUrl) {
           addLog("Running .exe in v86 requires a bootable OS image.");
           if (!hda) {
-              addLog("Mounting FreeDOS fallback...");
-              hda = { url: V86_ASSETS.freeDosUrl, async: true }; 
+              addLog("Warning: No bootable OS image provided for .exe execution.");
+              addLog("Please provide a FreeDOS or Windows image via hdaUrl.");
           }
-          if (!fda) {
+          if (!fda && activeGame.executableUrl) {
               addLog("Mounting executable as floppy...");
               fda = { url: activeGame.executableUrl, async: true };
           }
@@ -92,8 +120,10 @@ export const V86Screen: React.FC = () => {
         disable_keyboard: false,
       };
 
-      const instance = new V86Starter(v86Options);
+      addLog("Creating V86 instance...");
+      const instance = new window.V86(v86Options);
       emulatorInstance.current = instance;
+      addLog("V86 instance created successfully.");
 
       instance.add_listener("emulator-ready", () => {
         addLog("V86 Core Ready. Booting...");

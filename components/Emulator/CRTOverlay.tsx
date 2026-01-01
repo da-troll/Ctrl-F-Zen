@@ -18,8 +18,8 @@ export const CRTOverlay: React.FC = () => {
           background: 'radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%)',
         }}
       />
-      {/* Flicker Animation (Subtle) */}
-      <div className="absolute inset-0 bg-white opacity-[0.02] animate-pulse pointer-events-none mix-blend-overlay"></div>
+      {/* Subtle screen flicker - reduced opacity to avoid overwhelming glow */}
+      <div className="absolute inset-0 bg-white opacity-[0.005] pointer-events-none mix-blend-overlay"></div>
     </div>
   );
 };

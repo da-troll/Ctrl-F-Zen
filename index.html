@@ -31,6 +31,9 @@
         background: #52525b; 
       }
     </style>
+  <!-- Load v86 as a global script (exposes window.V86) -->
+  <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
+
   <script type="importmap">
 {
   "imports": {
@@ -39,7 +42,6 @@
     "react": "https://esm.sh/react@^19.2.3",
     "zustand/": "https://esm.sh/zustand@^5.0.9/",
     "zustand": "https://esm.sh/zustand@^5.0.9",
-    "v86": "https://esm.sh/v86@0.4.9",
     "immer": "https://esm.sh/immer@10.0.3"
   }
 }

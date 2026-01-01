@@ -6,15 +6,27 @@ import { GameConfig } from '../../types';
 // Mock Data representing what would come from Supabase
 const GAMES: GameConfig[] = [
   {
-    id: 'trackwords-98-native',
-    title: 'TrackWords (Native EXE)',
+    id: 'trackwords-98',
+    title: 'TrackWords (1998)',
     year: 1998,
-    description: 'Direct Win32 Executable emulation via RetroWin32. Runs the original .exe without a full OS image.',
+    description: 'Win32 word game executable. Boots FreeDOS, then run the .exe from the DOS prompt.',
     coverImage: 'https://picsum.photos/seed/trackwords/200/200',
     type: 'exe',
-    emulator: 'retrowin32',
-    memorySize: 32 * 1024 * 1024,
+    emulator: 'v86',
+    memorySize: 64 * 1024 * 1024,
+    floppyUrl: '/freedos722.img',
     executableUrl: 'https://onyrysthhdjfhwxuezap.supabase.co/storage/v1/object/sign/software-executables/TrackWords.exe?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82YmRhY2Y0OS1mMmVjLTRlNGEtOTc3Ny04NjdhN2MzZTM2M2QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJzb2Z0d2FyZS1leGVjdXRhYmxlcy9UcmFja1dvcmRzLmV4ZSIsImlhdCI6MTc2NzMwMTQyMSwiZXhwIjoxNzk4ODM3NDIxfQ.PR-jDkEtDYdotPu6d0AgU-PYe3MJ95jRlc_HVlGScLA'
+  },
+  {
+    id: 'freedos-demo',
+    title: 'FreeDOS 1.3 (Boot Demo)',
+    year: 2021,
+    description: 'FreeDOS 1.3 minimal bootable system. A free DOS-compatible operating system. You can upload .exe files to run them.',
+    coverImage: 'https://picsum.photos/seed/freedos/200/200',
+    type: 'dos',
+    emulator: 'v86',
+    memorySize: 32 * 1024 * 1024,
+    floppyUrl: '/freedos722.img'
   },
   {
     id: 'doom-shareware',
@@ -25,7 +37,8 @@ const GAMES: GameConfig[] = [
     type: 'dos',
     emulator: 'v86',
     memorySize: 32 * 1024 * 1024,
-    floppyUrl: 'https://copy.sh/v86/images/doom.img'
+    // Note: copy.sh is unreachable. Download disk images from https://archive.org/details/FD12CD
+    floppyUrl: undefined
   },
   {
     id: 'win98-os',
@@ -36,7 +49,8 @@ const GAMES: GameConfig[] = [
     type: 'win98',
     emulator: 'v86',
     memorySize: 128 * 1024 * 1024,
-    hdaUrl: 'https://copy.sh/v86/images/windows98.img' // Example URL
+    // Note: copy.sh is unreachable. Users need to provide their own OS images
+    hdaUrl: undefined
   }
 ];
 
@@ -52,27 +66,30 @@ export const Library: React.FC = () => {
     const lowerName = file.name.toLowerCase();
     const isExe = lowerName.endsWith('.exe');
     const isDos = lowerName.endsWith('.com') || lowerName.endsWith('.bat');
-
-    // Simple heuristic: if it's an EXE, default to RetroWin32 for speed, 
-    // unless user specifically wants full OS (which we can't easily guess here).
-    const useRetroWin = isExe; 
+    const isImg = lowerName.endsWith('.img') || lowerName.endsWith('.floppy');
+    const isIso = lowerName.endsWith('.iso');
 
     const newGame: GameConfig = {
       id: `custom-${Date.now()}`,
       title: file.name,
       year: 2024,
-      description: isExe 
-        ? 'Custom Windows Executable.' 
-        : 'Custom Disk Image imported from local machine.',
+      description: isExe
+        ? 'Custom executable. Note: Boot FreeDOS first, then you can run .exe files from the DOS prompt.'
+        : isIso
+        ? 'Custom CD-ROM image imported from local machine.'
+        : isImg
+        ? 'Custom floppy disk image imported from local machine.'
+        : 'Custom disk image imported from local machine.',
       coverImage: 'https://picsum.photos/seed/custom/200/200',
       type: isExe ? 'exe' : (isDos ? 'dos' : 'custom'),
-      emulator: useRetroWin ? 'retrowin32' : 'v86',
-      memorySize: 128 * 1024 * 1024,
-      
-      executableUrl: isExe ? url : undefined,
-      floppyUrl: (!isExe && (lowerName.endsWith('.img') || lowerName.endsWith('.floppy'))) ? url : undefined,
-      cdromUrl: (!isExe && lowerName.endsWith('.iso')) ? url : undefined,
-      hdaUrl: undefined, 
+      emulator: 'v86',
+      memorySize: isIso ? 128 * 1024 * 1024 : 64 * 1024 * 1024,
+
+      // For .exe files, mount FreeDOS as boot and the exe as a data floppy
+      floppyUrl: isImg ? url : (isExe ? '/freedos722.img' : undefined),
+      cdromUrl: isIso ? url : undefined,
+      hdaUrl: undefined,
+      executableUrl: isExe ? url : undefined, // Track exe URL for potential future use
     };
 
     addGame(newGame);

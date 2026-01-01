@@ -1,7 +1,6 @@
 import React from 'react';
 import { Library } from './components/Library/Library';
 import { V86Screen } from './components/Emulator/V86Screen';
-import { RetroWin32Screen } from './components/Emulator/RetroWin32Screen';
 import { ControlBar } from './components/Layout/ControlBar';
 import { Terminal } from './components/Layout/Terminal';
 import { useEmulatorStore } from './store/emulatorStore';
@@ -11,7 +10,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-zinc-950 text-white overflow-hidden">
-      
+
       {/* Left Sidebar: Game Library */}
       <aside className="hidden md:block shadow-xl z-20">
         <Library />
@@ -19,18 +18,14 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 relative">
-        
+
         {/* Top Control Bar */}
         <ControlBar />
 
         {/* Emulator Viewport */}
         <div className="flex-1 p-6 flex flex-col min-h-0 bg-[#0c0c0e]">
             <div id="emulator-container" className="flex-1 relative rounded-lg overflow-hidden shadow-2xl ring-1 ring-zinc-800">
-                {activeGame?.emulator === 'retrowin32' ? (
-                    <RetroWin32Screen />
-                ) : (
-                    <V86Screen />
-                )}
+                <V86Screen />
             </div>
         </div>
 

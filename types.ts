@@ -1,4 +1,4 @@
-export type EmulatorType = 'v86' | 'retrowin32';
+export type EmulatorType = 'v86';
 
 export interface GameConfig {
   id: string;
@@ -8,16 +8,16 @@ export interface GameConfig {
   coverImage: string;
   type: 'win98' | 'dos' | 'custom' | 'exe';
   emulator: EmulatorType;
-  
-  // v86 specific options
+
+  // v86 disk images
   floppyUrl?: string;
   cdromUrl?: string;
   hdaUrl?: string;
   biosUrl?: string;
   vgaUrl?: string;
-  memorySize: number; // in MB
+  memorySize: number; // in bytes
 
-  // Generic / RetroWin32 specific
+  // For tracking .exe files (will boot FreeDOS and exe can be run manually)
   executableUrl?: string;
   cmdArgs?: string[];
 }
@@ -37,7 +37,7 @@ export interface EmulatorSettings {
   bootOrder: number; // 0x213 = CD, Floppy, HD
 }
 
-// Minimal typing for the V86 object options
+// Minimal typing for the V86 constructor options
 export interface V86StarterOptions {
   wasm_path: string;
   memory_size: number;
@@ -54,7 +54,7 @@ export interface V86StarterOptions {
   network_relay_url?: string;
 }
 
-export interface V86StarterInstance {
+export interface V86Instance {
   destroy: () => void;
   stop: () => void;
   run: () => void;

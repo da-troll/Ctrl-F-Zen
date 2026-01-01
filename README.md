@@ -1,20 +1,28 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# RetroWin
 
-# Run and deploy your AI Studio app
+A React-based x86 emulator interface that runs legacy DOS and Windows applications directly in the browser using the v86 emulator and WebAssembly.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1lZydtF_YagvZuvpM95lN_S9VQCraW421
+- **V86 Emulation**: Full x86 PC emulation running in your browser
+- **DOS & Windows Support**: Run FreeDOS, Windows 98, and classic DOS software
+- **File Upload**: Import your own disk images (.iso, .img) or boot FreeDOS to run .exe files
+- **CRT Effect**: Optional retro CRT monitor overlay for authentic vintage feel
+- **Terminal Logging**: Real-time emulator status and boot logs
+- **Fully Client-Side**: No server required - everything runs in your browser
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open http://localhost:3000 in your browser
