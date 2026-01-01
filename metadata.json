@@ -1,0 +1,5 @@
+{
+  "name": "RetroWin",
+  "description": "A high-performance React-based x86 emulator interface designed to run legacy Windows applications like TrackWords (1998) directly in the browser using WebAssembly.",
+  "requestFramePermissions": []
+}
