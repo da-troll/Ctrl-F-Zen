@@ -9,12 +9,12 @@ const GAMES: GameConfig[] = [
     id: 'trackwords-98',
     title: 'TrackWords (1998)',
     year: 1998,
-    description: 'Win32 word game on FreeDOS. Type "TRACKWOR.EXE" at the A:\\> prompt to run.',
+    description: 'Win32 word game running in Wine via Boxedwine. Classic Windows 98-era word puzzle game.',
     coverImage: 'https://picsum.photos/seed/trackwords/200/200',
-    type: 'dos',
-    emulator: 'v86',
+    type: 'exe',
+    emulator: 'boxedwine',
     memorySize: 64 * 1024 * 1024,
-    floppyUrl: '/freedos-with-trackwords.img'
+    executableUrl: '/TrackWords.exe'
   },
   {
     id: 'freedos-demo',

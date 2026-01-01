@@ -1,6 +1,7 @@
 import React from 'react';
 import { Library } from './components/Library/Library';
 import { V86Screen } from './components/Emulator/V86Screen';
+import { BoxedwineScreen } from './components/Emulator/BoxedwineScreen';
 import { ControlBar } from './components/Layout/ControlBar';
 import { Terminal } from './components/Layout/Terminal';
 import { useEmulatorStore } from './store/emulatorStore';
@@ -25,7 +26,7 @@ export default function App() {
         {/* Emulator Viewport */}
         <div className="flex-1 p-6 flex flex-col min-h-0 bg-[#0c0c0e]">
             <div id="emulator-container" className="flex-1 relative rounded-lg overflow-hidden shadow-2xl ring-1 ring-zinc-800">
-                <V86Screen />
+                {activeGame?.emulator === 'boxedwine' ? <BoxedwineScreen /> : <V86Screen />}
             </div>
         </div>
 
