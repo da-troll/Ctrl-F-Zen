@@ -9,14 +9,14 @@ const GAMES: GameConfig[] = [
     id: 'trackwords-98',
     title: 'TrackWords (1998)',
     year: 1998,
-    description: 'Win32 word game. Boots FreeDOS from A:, TrackWords.exe on C: drive. Type "C:" then "TrackWords.exe" to run.',
+    description: 'Win32 word game. Boots FreeDOS from A:, TrackWords.exe on C: drive. Type "C:" then "TRACKWORDS.EXE" to run.',
     coverImage: 'https://picsum.photos/seed/trackwords/200/200',
     type: 'dos',
     emulator: 'v86',
     memorySize: 64 * 1024 * 1024,
     floppyUrl: '/freedos722.img',
-    hdaUrl: '/trackwords.img',
-    hdaSize: 1474560
+    hdaUrl: '/trackwords-hd.img',
+    hdaSize: 20971520
   },
   {
     id: 'freedos-demo',
