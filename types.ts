@@ -11,6 +11,7 @@ export interface GameConfig {
 
   // v86 disk images
   floppyUrl?: string;
+  fdbUrl?: string;
   cdromUrl?: string;
   hdaUrl?: string;
   biosUrl?: string;
@@ -48,6 +49,7 @@ export interface V86StarterOptions {
   cdrom?: { url: string; async?: boolean };
   hda?: { url: string; size?: number; async?: boolean };
   fda?: { url: string; async?: boolean };
+  fdb?: { url: string; async?: boolean };
   autostart: boolean;
   disable_keyboard?: boolean;
   disable_mouse?: boolean;

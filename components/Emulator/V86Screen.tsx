@@ -86,9 +86,10 @@ export const V86Screen: React.FC = () => {
       containerRef.current.appendChild(canvas);
 
       addLog("Initializing V86 Engine...");
-      
+
       let hda = activeGame?.hdaUrl ? { url: activeGame.hdaUrl, async: true } : undefined;
       let fda = activeGame?.floppyUrl ? { url: activeGame.floppyUrl, async: true } : undefined;
+      let fdb = activeGame?.fdbUrl ? { url: activeGame.fdbUrl, async: true } : undefined;
       let cdrom = activeGame?.cdromUrl ? { url: activeGame.cdromUrl, async: true } : undefined;
 
       // Note: .exe files cannot be directly mounted in v86
@@ -113,6 +114,7 @@ export const V86Screen: React.FC = () => {
         cdrom: cdrom,
         hda: hda,
         fda: fda,
+        fdb: fdb,
         autostart: true,
         disable_mouse: false,
         disable_keyboard: false,
