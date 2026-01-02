@@ -1,4 +1,4 @@
-export type EmulatorType = 'v86' | 'boxedwine';
+export type EmulatorType = 'v86' | 'boxedwine' | 'retrowin32';
 
 export interface GameConfig {
   id: string;

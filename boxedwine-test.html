@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boxedwine TrackWords Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        #instructions {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #canvas {
+            border: 2px solid #444;
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            background: #000;
+        }
+        .error {
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Boxedwine + TrackWords Test</h1>
+
+    <div id="instructions">
+        <h2>Testing Instructions:</h2>
+        <ol>
+            <li>Download Boxedwine WASM files from: <a href="https://github.com/danoon2/Boxedwine" target="_blank">GitHub Releases</a></li>
+            <li>Place <code>boxedwine.js</code> and <code>boxedwine.wasm</code> in the same directory as this HTML file</li>
+            <li>Place <code>TrackWords.exe</code> in this directory</li>
+            <li>Serve this directory with a local web server:
+                <pre>python3 -m http.server 8080</pre>
+                or
+                <pre>npx serve .</pre>
+            </li>
+            <li>Visit: <a href="http://localhost:8080/boxedwine-test.html">http://localhost:8080/boxedwine-test.html</a></li>
+        </ol>
+
+        <h3>What you need:</h3>
+        <ul>
+            <li>✅ TrackWords.exe (you have this)</li>
+            <li>⏳ boxedwine.wasm (download needed)</li>
+            <li>⏳ boxedwine.js (download needed)</li>
+            <li>⏳ boxedwine.zip (Wine root filesystem - download needed)</li>
+        </ul>
+    </div>
+
+    <div id="error-box" style="display: none;" class="error"></div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // This is a placeholder - actual Boxedwine integration would load here
+        // You'll need to download boxedwine.js and include it
+
+        const errorBox = document.getElementById('error-box');
+
+        if (typeof Module === 'undefined') {
+            errorBox.style.display = 'block';
+            errorBox.innerHTML = `
+                <strong>Boxedwine not loaded!</strong>
+                <p>Please download the required files from GitHub first.</p>
+                <p>See instructions above.</p>
+            `;
+        }
+
+        // When boxedwine.js is loaded, this would configure it:
+        /*
+        var Module = {
+            arguments: ['/root/TrackWords.exe'],
+            canvas: document.getElementById('canvas'),
+            preRun: [],
+            postRun: [],
+            print: function(text) {
+                console.log('[Boxedwine]:', text);
+            },
+            printErr: function(text) {
+                console.error('[Boxedwine ERROR]:', text);
+            }
+        };
+        */
+    </script>
+
+    <!-- When you have boxedwine.js, uncomment this: -->
+    <!-- <script src="boxedwine.js"></script> -->
+</body>
+</html>
