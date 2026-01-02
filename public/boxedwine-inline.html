@@ -3,7 +3,6 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>BoxedWine - TrackWords</title>
-    <link rel="stylesheet" type="text/css" href="boxedwine.css">
     <style>
       body {
         margin: 0;
@@ -52,20 +51,25 @@
 
     <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 
-    <script type="text/javascript" src="browserfs.min.js"></script>
-    <script type="text/javascript" src="jszip.min.js"></script>
-    <script type="text/javascript" src="shell.js"></script>
+    <script type="text/javascript" src="/boxedwine-browserfs.min.js"></script>
+    <script type="text/javascript" src="/boxedwine-jszip.min.js"></script>
+    <script type="text/javascript" src="/boxedwine-shell.js"></script>
     <script>
-      // Configure for inline mode
-      Config.isRunningInline = true;
-      Config.showUploadDownload = true;
-      Config.urlParams = "";
-
-      // Auto-start when ready
-      document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('status').textContent = 'Boxedwine ready - upload TrackWords.exe to begin';
+      // Wait for shell.js to load and define Config
+      window.addEventListener('DOMContentLoaded', function() {
+        // Config is defined by shell.js, so we need to wait for it
+        var checkConfig = setInterval(function() {
+          if (typeof Config !== 'undefined') {
+            clearInterval(checkConfig);
+            // Configure for inline mode
+            Config.isRunningInline = true;
+            Config.showUploadDownload = true;
+            Config.urlParams = "";
+            document.getElementById('status').textContent = 'Boxedwine ready - upload TrackWords.exe to begin';
+          }
+        }, 100);
       });
     </script>
-    <script async type="text/javascript" src="boxedwine.js"></script>
+    <script async type="text/javascript" src="/boxedwine.js"></script>
   </body>
 </html>
