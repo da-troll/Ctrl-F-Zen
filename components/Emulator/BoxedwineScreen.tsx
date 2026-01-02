@@ -38,12 +38,21 @@ export const BoxedwineScreen: React.FC = () => {
         throw new Error("Canvas not ready. Please try again.");
       }
 
-      // Check if shell.js functions are available
-      if (!window.BrowserFS || !window.Config) {
-        throw new Error("Boxedwine shell not loaded. Please refresh the page.");
+      addLog("Initializing Boxedwine...");
+
+      // Wait for shell.js to load (max 10 seconds)
+      let retries = 50;
+      while ((!window.BrowserFS || !window.Config) && retries > 0) {
+        addLog("Waiting for Boxedwine shell to load...");
+        await new Promise(resolve => setTimeout(resolve, 200));
+        retries--;
       }
 
-      addLog("Initializing Boxedwine...");
+      if (!window.BrowserFS || !window.Config) {
+        throw new Error("Boxedwine shell failed to load. Please refresh the page.");
+      }
+
+      addLog("Boxedwine shell loaded");
 
       // Configure Boxedwine
       const executablePath = activeGame?.executableUrl;
