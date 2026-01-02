@@ -40,36 +40,28 @@ export const BoxedwineScreen: React.FC = () => {
 
       addLog("Initializing Boxedwine...");
 
-      // Wait for shell.js to load (max 10 seconds)
-      let retries = 50;
-      while ((!window.BrowserFS || !window.Config) && retries > 0) {
-        addLog("Waiting for Boxedwine shell to load...");
-        await new Promise(resolve => setTimeout(resolve, 200));
+      // Wait for BrowserFS to load
+      let retries = 20;
+      while (!window.BrowserFS && retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, 100));
         retries--;
       }
 
-      if (!window.BrowserFS || !window.Config) {
-        throw new Error("Boxedwine shell failed to load. Please refresh the page.");
+      if (!window.BrowserFS) {
+        throw new Error("BrowserFS failed to load. Please refresh the page.");
       }
 
-      addLog("Boxedwine shell loaded");
-
-      // Configure Boxedwine
-      const executablePath = activeGame?.executableUrl;
-      const executableName = executablePath?.split('/').pop()?.split('?')[0] || 'app.exe';
-
+      addLog("BrowserFS loaded");
       addLog(`Loading: ${activeGame?.title}`);
       addLog("Preparing Wine environment...");
 
-      // Update Config with our settings
-      window.Config.urlParams = `p=${executableName}`;
-      window.Config.storageMode = "MEMORY";
-      window.Config.isRunningInline = true;
-      window.Config.showUploadDownload = false;
+      const executablePath = activeGame?.executableUrl;
+      const executableName = executablePath?.split('/').pop()?.split('?')[0] || 'notepad';
 
-      // Configure Emscripten Module
+      // Configure Emscripten Module before loading boxedwine.js
       window.Module = {
         canvas: canvasRef.current,
+        arguments: [`/root/TrackWords.exe`], // Wine will try to run this
         print: (text: string) => {
           console.log('[Boxedwine]:', text);
           if (text && !text.includes('pre-main') && !text.includes('GL_')) {
@@ -86,25 +78,20 @@ export const BoxedwineScreen: React.FC = () => {
           addLog("Wine environment ready");
           setStatus(EmulatorState.RUNNING);
         },
+        preRun: [],
+        postRun: [],
       };
 
-      addLog("Building filesystem from ZIP archives...");
+      addLog("Loading Boxedwine runtime...");
 
-      // Initialize BrowserFS with in-memory storage
-      if (window.BrowserFS && window.buildFileSystem) {
-        const inMemoryFS = new window.BrowserFS.FileSystem.InMemory();
-        window.buildFileSystem(inMemoryFS, false);
-      } else {
-        // Fallback: load boxedwine.js directly
-        addLog("Loading Boxedwine runtime...");
-        const script = document.createElement('script');
-        script.src = '/boxedwine.js';
-        script.async = true;
-        script.onerror = () => {
-          throw new Error("Failed to load boxedwine.js");
-        };
-        document.body.appendChild(script);
-      }
+      // Load boxedwine.js
+      const script = document.createElement('script');
+      script.src = '/boxedwine.js';
+      script.async = true;
+      script.onerror = () => {
+        throw new Error("Failed to load boxedwine.js");
+      };
+      document.body.appendChild(script);
 
     } catch (err: any) {
       console.error("Boxedwine start error:", err);
