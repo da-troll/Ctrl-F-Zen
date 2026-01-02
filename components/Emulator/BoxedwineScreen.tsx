@@ -8,6 +8,10 @@ declare global {
   interface Window {
     Module: any;
     Config: any;
+    start?: () => void;
+    startEmulator?: () => void;
+    buildFileSystem?: (writableStorage: any, isDropBox: boolean) => void;
+    BrowserFS?: any;
   }
 }
 
@@ -34,6 +38,11 @@ export const BoxedwineScreen: React.FC = () => {
         throw new Error("Canvas not ready. Please try again.");
       }
 
+      // Check if shell.js functions are available
+      if (!window.BrowserFS || !window.Config) {
+        throw new Error("Boxedwine shell not loaded. Please refresh the page.");
+      }
+
       addLog("Initializing Boxedwine...");
 
       // Configure Boxedwine
@@ -43,24 +52,11 @@ export const BoxedwineScreen: React.FC = () => {
       addLog(`Loading: ${activeGame?.title}`);
       addLog("Preparing Wine environment...");
 
-      // Initialize Config object with full configuration
-      window.Config = {
-        urlParams: `p=${executableName}`,
-        storageMode: "MEMORY",
-        showUploadDownload: false,
-        isRunningInline: true,
-        rootZipFile: "boxedwine_full.zip",
-        appZipFile: "files.zip",
-        Program: executableName,
-        WorkingDir: "/root/home/username/files/",
-        dirPrefix: "/root/home/username/files/",
-        isAutoRunSet: true,
-        isSoundEnabled: true,
-        isZlibEnabled: false,
-        retrieveDlls: false,
-        bpp: 32,
-        extraZipFiles: "",
-      };
+      // Update Config with our settings
+      window.Config.urlParams = `p=${executableName}`;
+      window.Config.storageMode = "MEMORY";
+      window.Config.isRunningInline = true;
+      window.Config.showUploadDownload = false;
 
       // Configure Emscripten Module
       window.Module = {
@@ -83,16 +79,23 @@ export const BoxedwineScreen: React.FC = () => {
         },
       };
 
-      addLog("Loading Boxedwine runtime...");
+      addLog("Building filesystem from ZIP archives...");
 
-      // Dynamically load boxedwine.js
-      const script = document.createElement('script');
-      script.src = '/boxedwine.js';
-      script.async = true;
-      script.onerror = () => {
-        throw new Error("Failed to load boxedwine.js");
-      };
-      document.body.appendChild(script);
+      // Initialize BrowserFS with in-memory storage
+      if (window.BrowserFS && window.buildFileSystem) {
+        const inMemoryFS = new window.BrowserFS.FileSystem.InMemory();
+        window.buildFileSystem(inMemoryFS, false);
+      } else {
+        // Fallback: load boxedwine.js directly
+        addLog("Loading Boxedwine runtime...");
+        const script = document.createElement('script');
+        script.src = '/boxedwine.js';
+        script.async = true;
+        script.onerror = () => {
+          throw new Error("Failed to load boxedwine.js");
+        };
+        document.body.appendChild(script);
+      }
 
     } catch (err: any) {
       console.error("Boxedwine start error:", err);
