@@ -1,25 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useEmulatorStore } from '../../store/emulatorStore';
 import { EmulatorState } from '../../types';
 import { CRTOverlay } from './CRTOverlay';
 
-// Boxedwine is loaded from public folder as global variables
-declare global {
-  interface Window {
-    Module: any;
-    Config: any;
-    start?: () => void;
-    startEmulator?: () => void;
-    buildFileSystem?: (writableStorage: any, isDropBox: boolean) => void;
-    BrowserFS?: any;
-  }
-}
-
 export const BoxedwineScreen: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const emulatorStarted = useRef(false);
   const { activeGame, status, setStatus, addLog, settings } = useEmulatorStore();
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === EmulatorState.BOOTING && activeGame && !emulatorStarted.current) {
@@ -29,86 +16,33 @@ export const BoxedwineScreen: React.FC = () => {
   }, [status, activeGame]);
 
   const startEmulator = async () => {
-    setError(null);
     emulatorStarted.current = true;
 
-    try {
-      // Verify canvas is available
-      if (!canvasRef.current) {
-        throw new Error("Canvas not ready. Please try again.");
-      }
+    addLog("Loading Boxedwine environment...");
+    addLog(`Game: ${activeGame?.title}`);
+    addLog("Boxedwine will open in embedded window");
+    addLog("Use the 'Add File(s)' button to upload TrackWords.exe");
+    addLog("Then click on TrackWords.exe to run it");
 
-      addLog("Initializing Boxedwine...");
-
-      // Wait for BrowserFS to load
-      let retries = 20;
-      while (!window.BrowserFS && retries > 0) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        retries--;
-      }
-
-      if (!window.BrowserFS) {
-        throw new Error("BrowserFS failed to load. Please refresh the page.");
-      }
-
-      addLog("BrowserFS loaded");
-      addLog(`Loading: ${activeGame?.title}`);
-      addLog("Preparing Wine environment...");
-
-      const executablePath = activeGame?.executableUrl;
-      const executableName = executablePath?.split('/').pop()?.split('?')[0] || 'notepad';
-
-      // Configure Emscripten Module before loading boxedwine.js
-      window.Module = {
-        canvas: canvasRef.current,
-        arguments: [`/root/TrackWords.exe`], // Wine will try to run this
-        print: (text: string) => {
-          console.log('[Boxedwine]:', text);
-          if (text && !text.includes('pre-main') && !text.includes('GL_')) {
-            addLog(text);
-          }
-        },
-        printErr: (text: string) => {
-          console.error('[Boxedwine ERROR]:', text);
-          if (text && !text.includes('warning')) {
-            addLog(`Error: ${text}`);
-          }
-        },
-        onRuntimeInitialized: () => {
-          addLog("Wine environment ready");
-          setStatus(EmulatorState.RUNNING);
-        },
-        preRun: [],
-        postRun: [],
-      };
-
-      addLog("Loading Boxedwine runtime...");
-
-      // Load boxedwine.js
-      const script = document.createElement('script');
-      script.src = '/boxedwine.js';
-      script.async = true;
-      script.onerror = () => {
-        throw new Error("Failed to load boxedwine.js");
-      };
-      document.body.appendChild(script);
-
-    } catch (err: any) {
-      console.error("Boxedwine start error:", err);
-      setError(err.message || "Failed to start Boxedwine");
-      setStatus(EmulatorState.ERROR);
-      addLog(`Error: ${err.message}`);
-      emulatorStarted.current = false;
-    }
+    // Set status to running since iframe will handle everything
+    setTimeout(() => {
+      setStatus(EmulatorState.RUNNING);
+      addLog("Boxedwine ready - upload TrackWords.exe to start");
+    }, 1000);
   };
 
   return (
     <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full"
-        style={{ imageRendering: 'pixelated' }}
-      />
+
+      {status === EmulatorState.RUNNING && (
+        <iframe
+          ref={iframeRef}
+          src="/boxedwine-example.html"
+          className="w-full h-full border-0"
+          title="Boxedwine Emulator"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-modals"
+        />
+      )}
 
       {settings.enableCRT && status === EmulatorState.RUNNING && <CRTOverlay />}
 
@@ -116,14 +50,7 @@ export const BoxedwineScreen: React.FC = () => {
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 text-indigo-500 font-mono">
           <div className="w-12 h-12 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
           <p className="animate-pulse">BOXEDWINE INITIALIZING...</p>
-          <p className="text-xs text-indigo-600 mt-2">Preparing Wine environment...</p>
-        </div>
-      )}
-
-      {status === EmulatorState.ERROR && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-zinc-900 text-red-500 p-8 text-center">
-          <p className="text-xl font-bold mb-2">Boxedwine Error</p>
-          <p className="font-mono text-sm">{error}</p>
+          <p className="text-xs text-indigo-600 mt-2">Loading Wine environment...</p>
         </div>
       )}
 

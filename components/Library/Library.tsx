@@ -9,7 +9,7 @@ const GAMES: GameConfig[] = [
     id: 'trackwords-98',
     title: 'TrackWords (1998)',
     year: 1998,
-    description: 'Win32 word game running in Wine via Boxedwine. Classic Windows 98-era word puzzle game.',
+    description: 'Win32 word game via Boxedwine. Click "Add File(s)" to upload TrackWords.exe, then click it to run.',
     coverImage: 'https://picsum.photos/seed/trackwords/200/200',
     type: 'exe',
     emulator: 'boxedwine',
