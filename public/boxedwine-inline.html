@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>BoxedWine - TrackWords</title>
+    <link rel="stylesheet" type="text/css" href="boxedwine.css">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+      }
+      #controls {
+        padding: 10px;
+        background: #1a1a1a;
+        border-bottom: 1px solid #333;
+      }
+      button {
+        background: #4a5568;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        margin-right: 8px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      button:hover {
+        background: #5a6678;
+      }
+      #canvas {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: #000;
+      }
+      #status {
+        padding: 10px;
+        background: #2a2a2a;
+        font-family: monospace;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="controls">
+      <button id="uploadbtn" onclick="document.getElementById('upload').click()">📁 Add TrackWords.exe</button>
+      <input style="display: none" id="upload" name="upload" onchange="startWithFiles(event.target.files);" type="file" accept=".exe" />
+      <span id="status">Ready - Click "Add TrackWords.exe" to upload the game</span>
+    </div>
+
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+    <script type="text/javascript" src="browserfs.min.js"></script>
+    <script type="text/javascript" src="jszip.min.js"></script>
+    <script type="text/javascript" src="shell.js"></script>
+    <script>
+      // Configure for inline mode
+      Config.isRunningInline = true;
+      Config.showUploadDownload = true;
+      Config.urlParams = "";
+
+      // Auto-start when ready
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('status').textContent = 'Boxedwine ready - upload TrackWords.exe to begin';
+      });
+    </script>
+    <script async type="text/javascript" src="boxedwine.js"></script>
+  </body>
+</html>

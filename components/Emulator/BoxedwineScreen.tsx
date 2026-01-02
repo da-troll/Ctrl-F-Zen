@@ -37,7 +37,7 @@ export const BoxedwineScreen: React.FC = () => {
       {status === EmulatorState.RUNNING && (
         <iframe
           ref={iframeRef}
-          src="/boxedwine-example.html"
+          src="/boxedwine-inline.html"
           className="w-full h-full border-0"
           title="Boxedwine Emulator"
           sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-modals"
