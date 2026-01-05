@@ -1,4 +1,4 @@
-# RetroWin
+# Ctrl+F+Zen
 
 A React-based x86 emulator interface that runs legacy DOS and Windows applications directly in the browser using the v86 emulator and WebAssembly.
 

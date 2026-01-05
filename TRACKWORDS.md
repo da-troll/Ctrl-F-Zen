@@ -4,7 +4,7 @@ TrackWords is a Win32 executable that requires Windows emulation to run in the b
 
 ## Current Status
 
-**Boxedwine integration is experimental and not yet working** in the RetroWin web app due to technical complexity. The code exists in the repository but is temporarily disabled.
+**Boxedwine integration is experimental and not yet working** in the Ctrl+F+Zen web app due to technical complexity. The code exists in the repository but is temporarily disabled.
 
 ## How to Run TrackWords Now
 
@@ -101,4 +101,4 @@ Build a custom interface without shell.js:
 
 **For now, use standalone Wine or Boxedwine** to run TrackWords locally. The web integration remains an interesting technical challenge for future development.
 
-The RetroWin app currently focuses on DOS games via v86, which works reliably.
+The Ctrl+F+Zen app currently focuses on DOS games via v86, which works reliably.

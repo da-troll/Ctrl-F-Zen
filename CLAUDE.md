@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-RetroWin is a React-based x86 emulator interface that runs legacy DOS and Windows applications directly in the browser using the v86 emulator. It can boot DOS/Windows operating systems from disk images and run vintage software.
+Ctrl+F+Zen is a React-based x86 emulator interface that runs legacy DOS and Windows applications directly in the browser using the v86 emulator. It can boot DOS/Windows operating systems from disk images and run vintage software.
 
 ## Development Commands
 

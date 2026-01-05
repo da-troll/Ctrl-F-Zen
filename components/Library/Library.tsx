@@ -9,10 +9,10 @@ const GAMES: GameConfig[] = [
     id: 'trackwords-98',
     title: 'TrackWords (1998)',
     year: 1998,
-    description: 'Win32 word game running on RetroWin32 emulator. Click Play to start!',
+    description: 'Win32 word game running on Boxedwine emulator.',
     coverImage: 'https://picsum.photos/seed/trackwords/200/200',
     type: 'exe',
-    emulator: 'retrowin32',
+    emulator: 'boxedwine',
     memorySize: 32 * 1024 * 1024,
     executableUrl: '/TrackWords.exe'
   },
@@ -100,7 +100,7 @@ export const Library: React.FC = () => {
       <div className="p-6 border-b border-zinc-800">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]"></span>
-            RetroWin
+            Ctrl+F+Zen
         </h2>
         <p className="text-xs text-zinc-500 mt-1">Multi-Core Architecture</p>
       </div>
